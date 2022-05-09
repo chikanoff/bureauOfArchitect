@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.bureau.service.UserAdminServiceUnitTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2022-04-13T10:52:02" hostname="LAPTOP-L2ADI7AU" time="0.313">
-  <properties/>
-  <testcase name="createUserReturnsEmailExist()" classname="com.bureau.service.UserAdminServiceUnitTest" time="0.309"/>
-  <testcase name="createUserReturnsUsernameExist()" classname="com.bureau.service.UserAdminServiceUnitTest" time="0.004"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
