@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.5.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group 'com.bureau'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    springSecurityVersion = "5.5.2"
+    springBootVersion = "2.5.6"
+    checkStyleVersion = '9.1'
+    jwtVersion = "0.9.1"
+    mockitoVersion = '4.1.0'
+    testContainersVersion = '2.0.20'
+    mapstructVersion = '1.4.2.Final'
+    postgresqlVersion = '42.3.1'
+    junitVersion = '5.7.0'
+    springCloudVersion = '3.0.3'
+    openApiVersion = '1.6.4'
+}
+
+dependencies {
+    implementation "org.springdoc:springdoc-openapi-ui:$openApiVersion"
+    implementation 'org.liquibase:liquibase-core'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation "org.springframework.security:spring-security-core:$springSecurityVersion"
+    implementation "org.springframework.security:spring-security-web:$springSecurityVersion"
+    implementation "org.springframework.boot:spring-boot-starter-validation:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+    implementation "org.springframework.security:spring-security-config:$springSecurityVersion"
+    implementation "io.jsonwebtoken:jjwt:$jwtVersion"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.postgresql:postgresql:$postgresqlVersion"
+    implementation "org.mapstruct:mapstruct:$mapstructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testImplementation "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.springframework.cloud:spring-cloud-starter-bootstrap:$springCloudVersion"
+    testImplementation "com.playtika.testcontainers:embedded-postgresql:$testContainersVersion"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+                   http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
+    <changeSet id="create-users-table" author="1">
+        <createTable tableName="users">
+            <column name="id" type="bigInt">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="full_name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(128)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="username" type="varchar(128)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="bigInt">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="users"
+                          columnDataType="bigInt"
+                          columnName="id"
+                          startWith="1"
+                          incrementBy="1" />
+        <addForeignKeyConstraint  baseColumnNames="role_id"
+                                  baseTableName="users"
+                                  constraintName="fk_user_role"
+                                  onDelete="CASCADE"
+                                  onUpdate="RESTRICT"
+                                  referencedColumnNames="id"
+                                  referencedTableName="user_roles"
+                                  validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,25 @@
+databaseChangeLog:
+    - include:
+          file: db/changelog/10-create-user-roles-scheme.xml
+    - include:
+        - file: db/changelog/12-fill-user-roles-table.xml
+    - include:
+          file: db/changelog/01-create-users-scheme.xml
+    - include:
+          file: db/changelog/02-create-admin.xml
+    - include:
+          file: db/changelog/03-create-project-types-scheme.xml
+    - include:
+          file: db/changelog/04-create-cities-scheme.xml
+    - include:
+          file: db/changelog/05-fill-project-types-table.xml
+    - include:
+          file: db/changelog/06-fill-cities-table.xml
+    - include:
+          file: db/changelog/07-create-clients-scheme.xml
+    - include:
+          file: db/changelog/08-create-projects-scheme.xml
+    - include:
+          file: db/changelog/09-create-user-projects-scheme.xml
+    - include:
+          file: db/changelog/11-add-project-url-to-projects-table.xml

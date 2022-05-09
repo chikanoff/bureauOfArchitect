@@ -1,0 +1,10 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://${HOST}:${PORT}/${DB_NAME}
+        username: ${USERNAME}
+        password: ${PASSWORD}
+
+jwt:
+    expiration: ${JWT_EXPIRATION}
+    private-key: ${PRIVATE_KEY}
+    public-key: ${PUBLIC_KEY}

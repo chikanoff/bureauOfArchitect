@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+                   http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
+    <changeSet id="create-projects-table" author="1">
+        <createTable tableName="projects">
+            <column name="id" type="bigInt">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id" type="bigInt">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city_id" type="bigInt">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_id" type="bigInt">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="text"/>
+            <column name="address" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="projects"
+                          columnDataType="bigInt"
+                          columnName="id"
+                          startWith="1"
+                          incrementBy="1" />
+        <addForeignKeyConstraint  baseColumnNames="type_id"
+                                  baseTableName="projects"
+                                  constraintName="fk_type_project"
+                                  onDelete="CASCADE"
+                                  onUpdate="RESTRICT"
+                                  referencedColumnNames="id"
+                                  referencedTableName="project_types"
+                                  validate="true"/>
+        <addForeignKeyConstraint  baseColumnNames="city_id"
+                                  baseTableName="projects"
+                                  constraintName="fk_city_project"
+                                  onDelete="CASCADE"
+                                  onUpdate="RESTRICT"
+                                  referencedColumnNames="id"
+                                  referencedTableName="cities"
+                                  validate="true"/>
+        <addForeignKeyConstraint  baseColumnNames="client_id"
+                                  baseTableName="projects"
+                                  constraintName="fk_client_project"
+                                  onDelete="CASCADE"
+                                  onUpdate="RESTRICT"
+                                  referencedColumnNames="id"
+                                  referencedTableName="clients"
+                                  validate="true"/>
+    </changeSet>
+</databaseChangeLog>
