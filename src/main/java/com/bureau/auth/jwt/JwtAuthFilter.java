@@ -1,6 +1,7 @@
 package com.bureau.auth.jwt;
 
 import com.bureau.auth.jwt.model.UserDetailsServiceImpl;
+import com.bureau.properties.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,17 +25,18 @@ import java.util.Optional;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtProperties jwtProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
-        Optional.ofNullable(getJwtFromRequest(request))
+        String token = getJwtToken(request, true);
+        Optional.ofNullable(token)
                 .filter(jwtService::validateToken)
                 .map(jwtService::getUsernameFrom)
                 .map(userDetailsService::loadUserByUsername)
                 .map(user -> new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities()))
                 .ifPresent(SecurityContextHolder.getContext()::setAuthentication);
-
         filterChain.doFilter(request, response);
     }
 
@@ -44,5 +47,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return bearerToken.substring(bearerLength);
         }
         return null;
+    }
+
+    private String getJwtFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if(cookies == null) return null;
+        for (Cookie cookie : cookies) {
+            if (jwtProperties.getAccessToken().equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
+
+    private String getJwtToken(HttpServletRequest request, boolean fromCookie) {
+        if (fromCookie) return getJwtFromCookie(request);
+
+        return getJwtFromRequest(request);
     }
 }

@@ -55,7 +55,7 @@ public class User {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "user_projects", joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})
-    private Set<Project> projects = new HashSet<>();
+    private Set<Project> projects;
 
     public void addProject(Project project) {
         projects.add(project);

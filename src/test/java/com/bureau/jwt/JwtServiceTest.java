@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Objects;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,9 +41,7 @@ public class JwtServiceTest extends IntegrationTestBase {
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk()).andReturn();
 
-        String token = result.getResponse().getContentAsString()
-                .replace("{\"token\":\"", "")
-                .replace("\"}", "");
+        String token = Objects.requireNonNull(result.getResponse().getCookie("accessToken")).getValue();
         assertThat(jwtService.validateToken(token)).isTrue();
     }
 

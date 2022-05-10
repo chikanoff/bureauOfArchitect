@@ -16,8 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedHeaders("*")
                 .allowedMethods("*")
-                .allowedOrigins("*")
-                .allowCredentials(false)
+                .allowedOrigins("http://localhost:3000")
+                .allowCredentials(true)
                 .maxAge(CORS_MAX_AGE);
     }
 }

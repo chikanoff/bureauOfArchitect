@@ -1,6 +1,7 @@
 package com.bureau.model.dto.response;
 
 import com.bureau.model.entity.ProjectType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ public class ProjectResponse {
 
     private ClientResponse client;
 
+    @JsonFormat(pattern="dd-MM-yyyy", timezone = "Europe/Minsk")
     private Date date;
 
     private String notes;

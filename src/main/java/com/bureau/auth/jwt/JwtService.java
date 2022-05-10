@@ -8,6 +8,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -41,6 +43,9 @@ public class JwtService {
     }
 
     public boolean validateToken(String jwt) {
+        if(jwt == null) {
+            return false;
+        }
         try {
             Jwts.parser().setSigningKey(jwtKeyProvider.getPublicKey()).parseClaimsJws(jwt);
             return true;
@@ -48,6 +53,14 @@ public class JwtService {
             log.warn("Invalid JWT!", e);
         }
         return false;
+    }
+    public void addTokenToCookie(HttpHeaders headers, String token) {
+        headers.add(HttpHeaders.SET_COOKIE, ResponseCookie.from(jwtProperties.getAccessToken(), token)
+                .maxAge(jwtProperties.getExpiration())
+                .httpOnly(true)
+                .path("/")
+                .sameSite("None")
+                .secure(true).build().toString());
     }
 
     public String getUsernameFrom(String jwt) {
@@ -59,5 +72,14 @@ public class JwtService {
                 .setSigningKey(jwtKeyProvider.getPublicKey())
                 .parseClaimsJws(jwt)
                 .getBody();
+    }
+
+    public void invalidateToken(HttpHeaders headers, String accessToken) {
+        headers.add(HttpHeaders.SET_COOKIE, ResponseCookie.from(jwtProperties.getAccessToken(), null)
+                .maxAge(0)
+                .httpOnly(true)
+                .path("/")
+                .sameSite("None")
+                .secure(true).build().toString());
     }
 }

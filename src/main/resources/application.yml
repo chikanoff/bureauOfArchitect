@@ -8,3 +8,4 @@ jwt:
     expiration: ${JWT_EXPIRATION}
     private-key: ${PRIVATE_KEY}
     public-key: ${PUBLIC_KEY}
+    accessToken: ${ACCESS_TOKEN}

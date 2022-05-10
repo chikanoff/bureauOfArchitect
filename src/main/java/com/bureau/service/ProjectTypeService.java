@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProjectTypeService {
@@ -41,5 +43,9 @@ public class ProjectTypeService {
 
     public ProjectType findOrThrow(Long id) {
         return projectTypeRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Project type with id" + id + "not found", ErrorStatusCodes.PROJECT_TYPE_NOT_FOUND));
+    }
+
+    public List<ProjectTypeResponse> getAll() {
+        return projectTypeRepository.findAll().stream().map(projectTypeMapper::projectTypeToProjectTypeResponse).toList();
     }
 }

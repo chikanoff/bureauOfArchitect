@@ -24,9 +24,6 @@ public class ProjectDto {
     @NotNull
     private Long clientId;
 
-    @NotNull
-    private Date date;
-
     @NotEmpty
     private String notes;
 
@@ -34,10 +31,6 @@ public class ProjectDto {
     private String address;
 
     @NotNull
-    private boolean active;
-
-    @NotNull
     private String projectUrl;
 
-    private Set<Long> userIds = new HashSet<>();
 }

@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.Cookie;
+import java.util.Objects;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,9 +39,7 @@ public class CityControllerTest extends IntegrationTestBase {
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk()).andReturn();
 
-        return result.getResponse().getContentAsString()
-                .replace("{\"token\":\"", "")
-                .replace("\"}", "");
+        return Objects.requireNonNull(result.getResponse().getCookie("accessToken")).getValue();
     }
 
     @Test
@@ -47,7 +48,7 @@ public class CityControllerTest extends IntegrationTestBase {
         mvc.perform(
                 get("/api/admin/city/")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + token))
+                        .cookie(new Cookie("accessToken", token)))
                 .andExpect(status().isOk());
     }
 
@@ -59,7 +60,7 @@ public class CityControllerTest extends IntegrationTestBase {
         mvc.perform(
                 post("/api/admin/city/")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + token)
+                        .cookie(new Cookie("accessToken", token))
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
     }
@@ -71,7 +72,7 @@ public class CityControllerTest extends IntegrationTestBase {
         mvc.perform(
                 delete("/api/admin/city/" + city.getId())
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + token))
+                        .cookie(new Cookie("accessToken", token)))
                 .andExpect(status().isOk());
     }
 
@@ -84,7 +85,7 @@ public class CityControllerTest extends IntegrationTestBase {
         mvc.perform(
                 put("/api/admin/city/" + city.getId())
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + token)
+                        .cookie(new Cookie("accessToken", token))
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
     }

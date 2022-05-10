@@ -11,6 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 
+import javax.servlet.http.Cookie;
+import java.util.Objects;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,13 +39,11 @@ public class JwtAuthFilterTest extends IntegrationTestBase {
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk()).andReturn();
 
-        String token = result.getResponse().getContentAsString()
-                .replace("{\"token\":\"", "")
-                .replace("\"}", "");
+        String token = Objects.requireNonNull(result.getResponse().getCookie("accessToken")).getValue();
 
         mvc.perform(get("/api/test/")
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                        .cookie(new Cookie("accessToken", token)))
                 .andExpect(status().isOk());
 
     }

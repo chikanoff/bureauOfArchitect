@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/type")
@@ -35,6 +36,10 @@ public class ProjectTypeController {
         return projectTypeService.findPage(pageable);
     }
 
+    @GetMapping("/all")
+    public List<ProjectTypeResponse> getAll() {
+        return projectTypeService.getAll();
+    }
     @GetMapping("{id}")
     public ProjectTypeResponse getById(@PathVariable("id") Long id) {
         return projectTypeService.findById(id);

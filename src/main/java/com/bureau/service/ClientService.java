@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ClientService {
@@ -42,5 +44,9 @@ public class ClientService {
 
     public Client findOrThrow(Long id) {
         return clientRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Client with id " + id + " not found", ErrorStatusCodes.CLIENT_NOT_FOUND));
+    }
+
+    public List<ClientResponse> getAll() {
+        return clientRepository.findAll().stream().map(clientMapper::clientToClientResponse).toList();
     }
 }

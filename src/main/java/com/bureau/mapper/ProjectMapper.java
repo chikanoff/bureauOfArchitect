@@ -16,6 +16,8 @@ public interface ProjectMapper {
     @Mapping(target = "client", ignore = true)
     @Mapping(target = "type", ignore = true)
     @Mapping(target = "users", ignore = true)
+    @Mapping(target = "date", ignore = true)
+    @Mapping(target = "active", ignore = true)
     Project projectDtoToProject(ProjectDto projectDto);
 
     ProjectResponse projectToProjectResponse(Project project);
@@ -25,6 +27,8 @@ public interface ProjectMapper {
     @Mapping(target = "client", ignore = true)
     @Mapping(target = "type", ignore = true)
     @Mapping(target = "users", ignore = true)
+    @Mapping(target = "date", ignore = true)
+    @Mapping(target = "active", ignore = true)
     void updateProjectWithProjectDto(ProjectDto projectDto, @MappingTarget Project project);
 
     List<ProjectResponse> projectListToProjectResponseList(List<Project> projectList);

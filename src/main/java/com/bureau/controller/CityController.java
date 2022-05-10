@@ -20,10 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/city")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 @Tag(name = "Cities configuration API")
 @SecurityRequirement(name = "security")
 @RequiredArgsConstructor
@@ -33,6 +34,12 @@ public class CityController {
     @GetMapping
     public Page<CityResponse> getPage(Pageable pageable) {
         return cityService.getPage(pageable);
+    }
+
+
+    @GetMapping("/all")
+    public List<CityResponse> getAll() {
+        return cityService.getAll();
     }
 
     @GetMapping("/{id}")

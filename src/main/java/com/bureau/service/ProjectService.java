@@ -3,6 +3,7 @@ package com.bureau.service;
 import com.bureau.exception.ItemNotFoundException;
 import com.bureau.mapper.ProjectMapper;
 import com.bureau.model.dto.request.entities.ProjectDto;
+import com.bureau.model.dto.request.project.GetProjectsByDatesBetweenRequest;
 import com.bureau.model.dto.request.project.PatchProjectRequest;
 import com.bureau.model.dto.response.ProjectResponse;
 import com.bureau.model.entity.Project;
@@ -13,6 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -36,10 +42,11 @@ public class ProjectService {
 
     public void create(ProjectDto projectDto) {
         Project project = projectMapper.projectDtoToProject(projectDto);
+        project.setDate(new Date());
+        project.setActive(true);
         project.setCity(cityService.findOrThrow(projectDto.getCityId()));
         project.setClient(clientService.findOrThrow(projectDto.getClientId()));
         project.setType(projectTypeService.findOrThrow(projectDto.getTypeId()));
-        project.setUsers(new HashSet<>(userService.findByIds(projectDto.getUserIds())));
         projectRepository.save(project);
     }
 
@@ -65,5 +72,21 @@ public class ProjectService {
 
     private Project findOrThrow(Long id) {
         return projectRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Project with id " + id + "not found", ErrorStatusCodes.PROJECT_NOT_FOUND));
+    }
+
+    public List<ProjectResponse> getAll() {
+        return projectRepository.findAll().stream().map(projectMapper::projectToProjectResponse).toList();
+    }
+
+    public List<ProjectResponse> getByDatesBetween(LocalDateTime startDate, LocalDateTime endDate) {
+
+        Date start = Date.from(startDate
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+        Date end = Date.from(endDate
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+
+        return projectRepository.findProjectsBetweenTwoDates(start, end).stream().map(projectMapper::projectToProjectResponse).toList();
     }
 }

@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.Cookie;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -37,9 +39,7 @@ public class ProjectControllerTest extends IntegrationTestBase {
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk()).andReturn();
 
-        return result.getResponse().getContentAsString()
-                .replace("{\"token\":\"", "")
-                .replace("\"}", "");
+        return Objects.requireNonNull(result.getResponse().getCookie("accessToken")).getValue();
     }
 
     @Test
@@ -48,19 +48,16 @@ public class ProjectControllerTest extends IntegrationTestBase {
         ProjectDto dto = new ProjectDto();
         dto.setName("test");
         dto.setNotes("notes");
-        dto.setDate(new Date());
         dto.setAddress("address");
-        dto.setActive(true);
         dto.setProjectUrl("url");
         dto.setTypeId(createProjectType().getId());
         dto.setClientId(createTestClient().getId());
-        dto.setUserIds(Set.of(createTestUser().getId()));
         dto.setCityId(createTestCity().getId());
 
         mvc.perform(
                         post("/api/admin/project/")
                                 .contentType("application/json")
-                                .header("Authorization", "Bearer " + token)
+                                .cookie(new Cookie("accessToken", token))
                                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
     }
@@ -71,7 +68,7 @@ public class ProjectControllerTest extends IntegrationTestBase {
         String token = getTokenFromAuthorization();
         mvc.perform(delete("/api/admin/project/" + proj.getId())
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + token)
+                        .cookie(new Cookie("accessToken", token))
                 ).andExpect(status().isOk());
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/client")
@@ -29,10 +30,13 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class ClientController {
     private final ClientService clientService;
-
     @GetMapping
     public Page<ClientResponse> getPage(Pageable pageable) {
         return clientService.findPage(pageable);
+    }
+    @GetMapping("/all")
+    public List<ClientResponse> getAll() {
+        return clientService.getAll();
     }
 
     @GetMapping("/{id}")

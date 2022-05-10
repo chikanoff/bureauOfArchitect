@@ -2,11 +2,13 @@ package com.bureau.service;
 
 import com.bureau.exception.DataExistException;
 import com.bureau.exception.ItemNotFoundException;
+import com.bureau.mapper.RoleMapper;
 import com.bureau.mapper.UserMapper;
 import com.bureau.model.dto.request.user.CreateUserRequest;
 import com.bureau.model.dto.request.user.PatchUserRequest;
 import com.bureau.model.dto.request.user.UpdateUserRequest;
 import com.bureau.model.dto.response.UserResponse;
+import com.bureau.model.dto.response.UserRoleResponse;
 import com.bureau.model.entity.User;
 import com.bureau.repository.UserRepository;
 import com.bureau.repository.UserRoleRepository;
@@ -27,6 +29,7 @@ public class UserAdminService {
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
 
     /**
      * Creates user in database
@@ -130,5 +133,13 @@ public class UserAdminService {
     private User findUserOrThrow(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ItemNotFoundException("Item not found with id " + id, ErrorStatusCodes.USER_NOT_FOUND));
+    }
+
+    public List<UserResponse> getAll() {
+        return userRepository.findAll().stream().map(userMapper::userToUserResponse).toList();
+    }
+
+    public List<UserRoleResponse> getAllRoles() {
+        return userRoleRepository.findAll().stream().map(roleMapper::roleToRoleResponse).toList();
     }
 }

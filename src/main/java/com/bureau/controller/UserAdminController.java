@@ -4,6 +4,7 @@ import com.bureau.model.dto.request.user.CreateUserRequest;
 import com.bureau.model.dto.request.user.PatchUserRequest;
 import com.bureau.model.dto.request.user.UpdateUserRequest;
 import com.bureau.model.dto.response.UserResponse;
+import com.bureau.model.dto.response.UserRoleResponse;
 import com.bureau.service.UserAdminService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/users")
@@ -40,6 +42,16 @@ public class UserAdminController {
     @GetMapping
     public Page<UserResponse> getPage(Pageable pageable) {
         return userAdminService.getPage(pageable);
+    }
+
+    @GetMapping("/roles")
+    public List<UserRoleResponse> getAllRoles() {
+        return userAdminService.getAllRoles();
+    }
+
+    @GetMapping("/all")
+    public List<UserResponse> getAll() {
+        return userAdminService.getAll();
     }
 
     @PostMapping

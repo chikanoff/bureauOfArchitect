@@ -23,3 +23,5 @@ databaseChangeLog:
           file: db/changelog/09-create-user-projects-scheme.xml
     - include:
           file: db/changelog/11-add-project-url-to-projects-table.xml
+    - include:
+        file: db/changelog/13-create-user.xml

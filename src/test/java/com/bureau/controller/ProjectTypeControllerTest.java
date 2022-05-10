@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.Cookie;
+import java.util.Objects;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,17 +39,16 @@ public class ProjectTypeControllerTest extends IntegrationTestBase {
                                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk()).andReturn();
 
-        return result.getResponse().getContentAsString()
-                .replace("{\"token\":\"", "")
-                .replace("\"}", "");
+        return Objects.requireNonNull(result.getResponse().getCookie("accessToken")).getValue();
     }
 
     @Test
     public void findPageReturnsOk() throws Exception {
+        String token = getTokenFromAuthorization();
         mvc.perform(
                 get("/api/admin/type/")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getTokenFromAuthorization())
+                        .cookie(new Cookie("accessToken", token))
                         .param("page", "1")
                         .param("size", "10")
                         .content("{}"))
@@ -56,11 +58,12 @@ public class ProjectTypeControllerTest extends IntegrationTestBase {
     @Test
     public void createTypeReturnsOk() throws Exception {
         ProjectTypeDto dto = new ProjectTypeDto();
+        String token = getTokenFromAuthorization();
         dto.setName("test");
         mvc.perform(
                 post("/api/admin/type/")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getTokenFromAuthorization())
+                        .cookie(new Cookie("accessToken", token))
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
     }
@@ -68,23 +71,25 @@ public class ProjectTypeControllerTest extends IntegrationTestBase {
     @Test
     public void updateTypeReturnsOk() throws Exception {
         ProjectType type = createProjectType();
+        String token = getTokenFromAuthorization();
         ProjectTypeDto dto = new ProjectTypeDto();
         dto.setName("new name");
         mvc.perform(
                 put("/api/admin/type/" + type.getId())
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getTokenFromAuthorization())
+                        .cookie(new Cookie("accessToken", token))
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void deleteTypeReturnsOk() throws Exception {
+        String token = getTokenFromAuthorization();
         ProjectType type = createProjectType();
         mvc.perform(
                 delete("/api/admin/type/" + type.getId())
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + getTokenFromAuthorization()))
+                        .cookie(new Cookie("accessToken", token)))
                 .andExpect(status().isOk());
     }
 }

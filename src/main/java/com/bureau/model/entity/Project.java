@@ -63,7 +63,7 @@ public class Project {
     private String projectUrl;
 
     @ManyToMany(mappedBy = "projects")
-    private Set<User> users = new HashSet<>();
+    private Set<User> users;
 
     public void addUser(User user) {
         users.add(user);

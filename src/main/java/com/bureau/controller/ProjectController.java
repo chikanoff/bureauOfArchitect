@@ -1,6 +1,8 @@
 package com.bureau.controller;
 
 import com.bureau.model.dto.request.entities.ProjectDto;
+import com.bureau.model.dto.request.project.GetProjectsByDatesBetweenRequest;
+import com.bureau.model.dto.request.project.PatchProjectRequest;
 import com.bureau.model.dto.request.project.ProjectAssignationRequest;
 import com.bureau.model.dto.request.user.CreateUserRequest;
 import com.bureau.model.dto.response.ProjectResponse;
@@ -11,21 +13,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/project")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 @Tag(name = "Project configuration API")
 @SecurityRequirement(name = "security")
 @RequiredArgsConstructor
@@ -36,6 +34,11 @@ public class ProjectController {
     @GetMapping
     public Page<ProjectResponse> getPage(Pageable pageable) {
         return projectService.findPage(pageable);
+    }
+
+    @GetMapping("/all")
+    public List<ProjectResponse> getAll() {
+        return projectService.getAll();
     }
 
     @GetMapping("/{id}")
@@ -51,6 +54,17 @@ public class ProjectController {
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @Valid @RequestBody ProjectDto projectDto) {
         projectService.update(id, projectDto);
+    }
+
+    @GetMapping("/byDates")
+    public List<ProjectResponse> getByDates(@RequestParam(value="startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+                                            @RequestParam(value="endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        return projectService.getByDatesBetween(startDate, endDate);
+    }
+
+    @PatchMapping("/{id}")
+    public void changeActive(@PathVariable Long id, @Valid @RequestBody PatchProjectRequest req) {
+        projectService.patch(id, req);
     }
 
     @DeleteMapping("/{id}")

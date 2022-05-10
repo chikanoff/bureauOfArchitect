@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CityService {
@@ -43,5 +45,9 @@ public class CityService {
     public City findOrThrow(Long id) {
         return cityRepository.findById(id)
                 .orElseThrow(() -> new ItemNotFoundException("City with id " + id + " not found", ErrorStatusCodes.CITY_NOT_FOUND));
+    }
+
+    public List<CityResponse> getAll() {
+        return cityRepository.findAll().stream().map(cityMapper::cityToCityResponse).toList();
     }
 }
